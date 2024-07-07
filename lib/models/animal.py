@@ -1,21 +1,21 @@
 from models.__init__ import CURSOR, CONN
-from models.vertebrate import Vertebrate
+from models.zoo import Zoo
 
 
 class Animal:
     # Dictionary of objects saved to the database.
     all = {}
 
-    def __init__(self, name, region, vertebrate_id, id=None):
+    def __init__(self, name, species, zoo_id, id=None):
         self.id = id
         self.name = name
-        self.region = region
-        self.vertebrate_id = vertebrate_id
+        self.species = species
+        self.zoo_id = zoo_id
 
     def __repr__(self):
         return (
-            f"<Animal {self.id}: {self.name}, {self.region}, " +
-            f"Classification: {self.vertebrate_id}>"
+            f"<Animal {self.id}: {self.name}, Species: {self.species}, " +
+            f"Home: {Zoo.find_by_id(self.zoo_id).name}>"
         )
 
     @property
@@ -32,16 +32,16 @@ class Animal:
             )
 
     @property
-    def vertebrate_id(self):
-        return self._vertebrate_id
+    def zoo_id(self):
+        return self._zoo_id
 
-    @vertebrate_id.setter
-    def vertebrate_id(self, vertebrate_id):
-        if type(vertebrate_id) is int and Vertebrate.find_by_id(vertebrate_id):
-            self._vertebrate_id = vertebrate_id
+    @zoo_id.setter
+    def zoo_id(self, zoo_id):
+        if type(zoo_id) is int and Zoo.find_by_id(zoo_id):
+            self._zoo_id = zoo_id
         else:
             raise ValueError(
-                "vertebrate_id must reference a vertebrate class in the database")
+                "zoo_id must reference a Zoo class in the database")
     
     @classmethod
     def create_table(cls):
@@ -50,9 +50,9 @@ class Animal:
             CREATE TABLE IF NOT EXISTS animals (
             id INTEGER PRIMARY KEY,
             name TEXT,
-            region TEXT,
-            vertebrate_id INTEGER,
-            FOREIGN KEY (vertebrate_id) REFERENCES vertebrates(id))
+            species TEXT,
+            zoo_id INTEGER,
+            FOREIGN KEY (zoo_id) REFERENCES Zoos(id))
         """
         CURSOR.execute(sql)
         CONN.commit()
@@ -67,23 +67,100 @@ class Animal:
         CONN.commit()
 
     @classmethod
-    def create(cls, name, region, vertebrate_id):
+    def create(cls, name, species, zoo_id):
         """ Initialize a new Animal instance and save the object to the database """
-        animal = cls(name, region, vertebrate_id)
+        animal = cls(name, species, zoo_id)
         animal.save()
         return animal
     
     def save(self):
-        """ Insert a new row with the name, region, and vertebrate id values of the current Animal object.
+        """ Insert a new row with the name, region, and Zoo id values of the current Animal object.
         Update object id attribute using the primary key value of new row.
         Save the object in local dictionary using table row's PK as dictionary key"""
         sql = """
-                INSERT INTO animals (name, region, vertebrate_id)
+                INSERT INTO animals (name, species, zoo_id)
                 VALUES (?, ?, ?)
         """
 
-        CURSOR.execute(sql, (self.name, self.region, self.vertebrate_id))
+        CURSOR.execute(sql, (self.name, self.species, self.zoo_id))
         CONN.commit()
 
         self.id = CURSOR.lastrowid
         type(self).all[self.id] = self
+
+    @classmethod
+    def get_all(cls):
+        """Return a list containing an Animal object per row in the table"""
+        sql = """
+            SELECT *
+            FROM animals
+        """
+
+        rows = CURSOR.execute(sql).fetchall()
+
+        return [cls.instance_from_db(row) for row in rows]
+
+    @classmethod
+    def instance_from_db(cls, row):
+        """Return an Animal object having the attribute values from the table row."""
+
+        # Check the dictionary for an existing instance using the row's primary key
+        animal = cls.all.get(row[0])
+        if animal:
+            # ensure attributes match row values in case local instance was modified
+            animal.name = row[1]
+            animal.species = row[2]
+            animal.zoo_id = row[3]
+        else:
+            # not in dictionary, create new instance and add to dictionary
+            animal = cls(row[1], row[2], row[3])
+            animal.id = row[0]
+            cls.all[animal.id] = animal
+        return animal
+    
+    @classmethod
+    def create(cls, name, species, zoo_id):
+        """ Initialize a new Animal instance and save the object to the database """
+        animal = cls(name, species, zoo_id)
+        animal.save()
+        return animal
+
+    def update(self):
+        """Update the table row corresponding to the current Animal instance."""
+        sql = """
+            UPDATE animals
+            SET name = ?, species = ?, zoo_id = ?
+            WHERE id = ?
+        """
+        CURSOR.execute(sql, (self.name, self.species, self.zoo_id, self.id))
+        CONN.commit()
+
+    def delete(self):
+        """Delete the table row corresponding to the current Animal instance,
+        delete the dictionary entry, and reassign id attribute"""
+
+        sql = """
+            DELETE FROM animals
+            WHERE id = ?
+        """
+
+        CURSOR.execute(sql, (self.id,))
+        CONN.commit()
+
+        # Delete the dictionary entry using id as the key
+        del type(self).all[self.id]
+
+        # Set the id to None
+        self.id = None
+    
+    @classmethod
+    def find_by_id(cls, id):
+        """Return Animal object corresponding to the table row matching the specified primary key"""
+        sql = """
+            SELECT *
+            FROM animals
+            WHERE id = ?
+        """
+
+        row = CURSOR.execute(sql, (id,)).fetchone()
+        return cls.instance_from_db(row) if row else None
