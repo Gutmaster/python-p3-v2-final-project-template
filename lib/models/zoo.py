@@ -26,7 +26,19 @@ class Zoo:
                 "Name must be a non-empty string"
             )
         
-
+    @property
+    def location(self):
+        return self._location
+    
+    @location.setter
+    def location(self, location):
+        if isinstance(location, str) and len(location):
+            self._location = location
+        else:
+            raise ValueError(
+                "Location must be a non-empty string"
+            )
+        
     @classmethod
     def create_table(cls):
         """ Create a new table to persist the attributes of Zoo instances """
@@ -69,6 +81,33 @@ class Zoo:
 
         self.id = CURSOR.lastrowid
         type(self).all[self.id] = self
+    
+    def update(self):
+        """Update the table row corresponding to the current Zoo instance."""
+        sql = """
+            UPDATE zoos
+            SET name = ?, location = ?
+            WHERE id = ?
+        """
+        CURSOR.execute(sql, (self.name, self.location, self.id))
+        CONN.commit()
+
+    def delete(self):
+        """Delete the table row corresponding to the current Zoo instance,
+        delete the dictionary entry, and reassign id attribute"""
+        sql = """
+            DELETE FROM zoos
+            WHERE id = ?
+        """
+
+        CURSOR.execute(sql, (self.id,))
+        CONN.commit()
+
+        # Delete the dictionary entry using id as the key
+        del type(self).all[self.id]
+
+        # Set the id to None
+        self.id = None
 
     @classmethod
     def get_all(cls):

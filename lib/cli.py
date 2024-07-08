@@ -4,9 +4,15 @@ from helpers import (
     exit_program,
     list_zoos,
     create_zoo,
+    update_zoo,
+    close_zoo,
     list_animals,
     create_animal,
-    transfer_animal
+    update_animal,
+    transfer_animal,
+    free_animal,
+    list_animals_by_species,
+    list_animals_by_zoo
 )
 
 
@@ -22,23 +28,43 @@ def main():
         elif choice == "2":
             create_zoo()
         elif choice == "3":
-            list_animals()
+            update_zoo()
         elif choice == "4":
-            create_animal()
+            close_zoo()
         elif choice == "5":
+            list_animals()
+        elif choice == "6":
+            create_animal()
+        elif choice == "7":
+            update_animal()
+        elif choice == "8":
             transfer_animal()
+        elif choice == "9":
+            free_animal()
+        elif choice == "10":
+            species = input("\nEnter the species: ")
+            list_animals_by_species(species)
+        elif choice == "11":
+            list_animals_by_zoo()
         else:
             print("Invalid choice")
+        input("Enter to continue...")
 
 
 def menu():
-    print("Please select an option:")
+    print("\nPlease select an option:")
     print("0. Exit the program")
     print("1. List zoos")
-    print("2. Add a new Zoo")
-    print("3. List all animals")
-    print("4. Add an animal")
-    print("5. Transfer an animal")
+    print("2. Add a new zoo")
+    print("3. Update a zoo")
+    print("4. Close a zoo")
+    print("5. List all animals")
+    print("6. Add an animal")
+    print("7. Update an animal")
+    print("8. Transfer an animal")
+    print("9. Free an animal")
+    print("10. Get all animals of a given species")
+    print("11. List animals by zoo")
 
 
 if __name__ == "__main__":

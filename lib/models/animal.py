@@ -48,7 +48,7 @@ class Animal:
         """ Create a new table to persist the attributes of Animal instances """
         sql = """
             CREATE TABLE IF NOT EXISTS animals (
-            id INTEGER PRIMARY KEY,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT,
             species TEXT,
             zoo_id INTEGER,
@@ -164,3 +164,19 @@ class Animal:
 
         row = CURSOR.execute(sql, (id,)).fetchone()
         return cls.instance_from_db(row) if row else None
+    
+    @classmethod
+    def find_all_by_species(cls, species):
+        """Returns all animals of a given species from the database"""
+        sql = """
+            SELECT *
+            FROM animals
+            where species = ?
+        """
+
+        rows = CURSOR.execute(sql, (species,)).fetchall()
+        animals = []
+        for row in rows:
+            animals.append(cls.instance_from_db(row))
+
+        return animals

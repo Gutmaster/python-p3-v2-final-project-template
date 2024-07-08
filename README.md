@@ -1,6 +1,5 @@
 # Phase 3 CLI+ORM Project 
-## Simple Taxonomy 
-
+## Zoos Keeper
 
 ## Introduction
 This command line interface provides a way to track different zoos and the
@@ -10,6 +9,13 @@ the file first to gain permissions.
 
 
 # File Descriptions
+
+## seed.py
+This file resets and seeds the zoo_network database with initial values for
+the program. It can be run by entering `python lib/seed.py`. Permission may
+need to be granted with `chmod +x`.
+
+
 
 ## cli.py
 This file provides the user interface for the program. Users can select
@@ -27,41 +33,138 @@ available to the user.
 
 
 
+## helpers.py
+This file contains all the helper function that are called by the CLI in cli.py.
 
-You are also welcome to implement a different module and directory structure.
-However, your project should be well organized, modular, and follow the design
-principal of separation of concerns, which means you should separate code
-related to:
+### exit_program
+Prints a goodbye message and closes the interface.
 
-- User interface
-- Data persistence
-- Problem domain rules and logic
+### list_zoos
+Displays a list of all zoos in the zoos database.
 
----
+### create_zoo
+Prompts the user for a name and location for a new zoo to add to the database.
 
-## Updating README.md
+### update_zoo
+Allows a user to select an existing zoo to edit the name and location.
 
-`README.md` is a Markdown file that should describe your project. You will
-replace the contents of this `README.md` file with a description of **your**
-actual project.
+### close_zoo
+Closes a zoo in the database, deleting it and all animals associated with it
+from their respective database.
 
-Markdown is not a language that we cover in Flatiron's Software Engineering
-curriculum, but it's not a particularly difficult language to learn (if you've
-ever left a comment on Reddit, you might already know the basics). Refer to the
-cheat sheet in this assignments's resources for a basic guide to Markdown.
+### list_animals
+Displays a list of all animals in the animals database.
 
-### What Goes into a README?
+### create_animal
+Prompts the user for a name and species of a new animal, as well as the id of
+the zoo it will be assigned to.
 
-This README serves as a template. Replace the contents of this file to describe
-the important files in your project and describe what they do. Each Python file
-that you edit should get at least a paragraph, and each function should be
-described with a sentence or two.
+### update_animal
+Allos a user to update the name and species of an animal.
 
-Describe your actual CLI script first, and with a good level of detail. The rest
-should be ordered by importance to the user. (Probably functions next, then
-models.)
+### transfer_animal
+Allows the user to transfer an animal from one zoo to another by selecting the
+source zoo, an animal within, and the new zoo it will go to.
 
-Screenshots and links to resources that you used throughout are also useful to
-users and collaborators, but a little more syntactically complicated. Only add
-these in if you're feeling comfortable with Markdown.
+### free_animal
+Deletes an animal from the animals database, and displays a farewell message.
 
+### list_animals_by_species
+Prompts the user for a species and lists all animals of that species.
+
+### list_animals_by_zoo
+Prompts the user for a zoo id and lists all animals in that zoo.
+
+
+
+## zoo.py
+This file defines the structure of our zoos database and contains all of the functions
+that interact directly with it. All functions are contained within the Zoo class, which
+corresponds with our zoos database and copies and tracks each row as a Python object.
+
+### __init__
+Takes a name and location for the Zoo object and runs it through our validataions to 
+ensure that valid strings are passed in.
+
+### __repr__
+Defines how our Zoo object will be formatted and printed to the console.
+
+### create_table
+Class method that uses SQL through sqlite to create and persist a database table for all zoos.
+
+### drop_table
+Class method that uses SQL through sqlite to drop the zoos table.
+
+### create
+Class method that creates a new row for the zoos table.
+
+### save
+Instance method that uses sqlite to save the current instance to the zoos database.
+    
+### update
+Instance method that update the corresponding entry in the zoos table with the current
+instance's attributes.
+
+### delete
+Instance method that deletes the corresponding entry in the zoos table.
+
+### get_all
+Class method that returns all entries from the zoos table as Python objects.
+
+### instance_from_db
+Class method that takes a row from the database and finds and returns the corresponding
+instance from the Zoo class, creating a new instance if it doesn't exist.
+
+### find_by_id
+Class method that takes an ID and returns the corresponding database entry as a Python object.
+
+### get_animals
+Instance method that returns an array of all animals in the animals database who's foreign key
+matches the Zoo instance it is called on.
+
+
+
+## animal.py
+This file defines the structure of our animals database and contains all of the functions
+that interact directly with it. All functions are contained within the Animal class, which
+corresponds with our animals database and copies and tracks each row as a Python object.
+
+### __init__
+Takes a name, species, and zoo_id for the Animal object and runs it through our validataions to 
+ensure that valid values are passed in.
+
+### __repr__
+Defines how our Animal object will be formatted and printed to the console.
+
+### create_table
+Class method that uses SQL through sqlite to create and persist a database table for all animals.
+
+### drop_table
+Class method that uses SQL through sqlite to drop the animals table.
+
+### create
+Class method that creates a new row for the animals table.
+
+### save
+Instance method that uses sqlite to save the current instance to the animals database.
+    
+### update
+Instance method that update the corresponding entry in the animals table with the current
+instance's attributes.
+
+### delete
+Instance method that deletes the corresponding entry in the animals table.
+
+### get_all
+Class method that returns all entries from the animals table as Python objects.
+
+### instance_from_db
+Class method that takes a row from the database and finds and returns the corresponding
+instance from the Animal class, creating a new instance if it doesn't exist.
+    
+### find_by_id
+Class method that takes an ID and returns the corresponding database entry as a Python object.
+    
+### find_all_by_species
+Class method that takes a species as a string and returns a list of corresponding Python objects
+from the database.

@@ -15,9 +15,6 @@ def seed_database():
     SanDiego = Zoo.create("San Diego Zoo", "San Diego, CA")
 
     Animal.create("Herbert", "Gorilla", WoodlandPark.id)
-    Animal.create("Tommy", "Hyena", WoodlandPark.id)
-    Animal.create("Sammy", "Python", WoodlandPark.id)
-    Animal.create("Harrison Bergeron", "Gorilla", SanDiego.id)
     Animal.create("Jonulus", "Panda", SanDiego.id)
 
 
