@@ -1,4 +1,4 @@
-# lib/cli.py
+#!/usr/bin/env python3
 
 from helpers import (
     exit_program,
@@ -42,13 +42,12 @@ def main():
         elif choice == "9":
             free_animal()
         elif choice == "10":
-            species = input("\nEnter the species: ")
-            list_animals_by_species(species)
+            list_animals_by_species()
         elif choice == "11":
             list_animals_by_zoo()
         else:
-            print("Invalid choice")
-        input("Enter to continue...")
+            print("\nInvalid choice")
+        input("\nPress Enter to continue...")
 
 
 def menu():

@@ -171,7 +171,7 @@ class Animal:
         sql = """
             SELECT *
             FROM animals
-            where species = ?
+            where LOWER(species) = LOWER(?)
         """
 
         rows = CURSOR.execute(sql, (species,)).fetchall()
