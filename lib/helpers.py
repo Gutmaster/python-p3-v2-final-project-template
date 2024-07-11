@@ -10,7 +10,7 @@ def list_zoos():
     print()
     zoos = Zoo.get_all()
     if not zoos:
-        print("\nNo zoos found!")
+        print("No zoos found!")
         return -1
     else:
         for zoo in zoos:
@@ -41,7 +41,7 @@ def list_animals_by_zoo():
             for animal in animals:
                 print(animal)
         else:
-            print("\nNo animals in this zoo")
+            print("No animals in this zoo")
         return zoo_id
     else:
         print("\nZoo not found")
@@ -78,12 +78,13 @@ def close_zoo():
     id_ = input("\nEnter the zoo's id: ")
     if zoo := Zoo.find_by_id(id_):
         animals = zoo.get_animals()
+        if animals: print("\nReleasing animals...")
         for animal in animals:
             animal.delete()
             print(f'Goodbye, {animal.name}!')
         try:
             zoo.delete()
-            print(f'\nSuccess: Zoo {zoo.name} deleted\n')
+            print(f'\nSuccess: Zoo {zoo.name} deleted')
         except Exception as exc:
             print("\nError deleting zoo: ", exc)
     else:
@@ -91,6 +92,9 @@ def close_zoo():
 
 
 def create_animal():
+    if not Zoo.get_all():
+        print("\nNo zoos to place animal in!")
+        return
     name = input("\nEnter the animal's name: ")
     species = input("Enter the animal's species: ")
     list_zoos()
@@ -155,7 +159,7 @@ def free_animal():
         print(f'\nSuccess: Animal {animal.name} has been returned to nature.')
         print(f'Goodbye, {animal.name}!\n')
     else:
-        print(f'\nAnimal {id_} not found')
+        print(f'\nAnimal not found')
 
 def list_animals_by_species():
     species = input("\nEnter the species name: ")

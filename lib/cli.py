@@ -20,6 +20,7 @@ from helpers import (
 def main():
     while True:
         menu()
+        print("\nPlease select an option:")
         choice = input("> ")
         if choice == "0":
             exit_program()
@@ -51,10 +52,9 @@ def main():
 
 
 def menu():
-    print("\nPlease select an option:")
-    print("0. Exit the program")
+    print("\n0. Exit the program")
     print("1. List zoos")
-    print("2. Add a new zoo")
+    print("2. Add a zoo")
     print("3. Update a zoo")
     print("4. Close a zoo")
     print("5. List all animals")
@@ -62,7 +62,7 @@ def menu():
     print("7. Update an animal")
     print("8. Transfer an animal")
     print("9. Free an animal")
-    print("10. Get all animals of a given species")
+    print("10. List animals by given species")
     print("11. List animals by zoo")
 
 

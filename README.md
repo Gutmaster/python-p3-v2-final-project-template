@@ -3,16 +3,16 @@
 
 ## Introduction
 This command line interface provides a way to track different zoos and the
-animals that live there. You can run this program by entering `python lib.cli.py` 
-into the terminal from the project directory. You may need to run `chmod +x` on 
-the file first to gain permissions.
+animals that live there. You can run this program by entering `lib/cli.py` 
+into the terminal from the project directory. Permission may
+need to be granted with `chmod +x`.
 
 
 # File Descriptions
 
 ## seed.py
 This file resets and seeds the zoo_network database with initial values for
-the program. It can be run by entering `python lib/seed.py`. Permission may
+the program. It can be run by entering `lib/seed.py` from the project directory. Permission may
 need to be granted with `chmod +x`.
 
 
