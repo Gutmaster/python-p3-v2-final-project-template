@@ -10,7 +10,7 @@ def list_zoos():
     print()
     zoos = Zoo.get_all()
     if not zoos:
-        print("No zoos found!")
+        print("No zoos found.")
         return -1
     else:
         for zoo in zoos:
@@ -20,7 +20,7 @@ def list_animals():
     print()
     animals = Animal.get_all()
     if not animals:
-        print("No animals found")
+        print("No animals found.")
     else:
         for animal in animals:
             print(animal)
@@ -31,20 +31,19 @@ def list_animals_by_zoo():
     try:
         zoo_id = int(input('\nEnter the zoo ID:'))
     except ValueError:
-        print("\nInvalid zoo ID")
+        print("\nZoo id must be an integer.")
         return
-    zoo = Zoo.find_by_id(zoo_id)
-    if zoo:
+    if zoo := Zoo.find_by_id(zoo_id):
         print()
         animals = zoo.get_animals()
         if animals:
             for animal in animals:
                 print(animal)
         else:
-            print("No animals in this zoo")
+            print("No animals in this zoo.")
         return zoo_id
     else:
-        print("\nZoo not found")
+        print("\nZoo not found.")
         return None
 
 def create_zoo():
@@ -68,11 +67,11 @@ def update_zoo():
             if location:
                 zoo.location = location
             zoo.update()
-            print(f'\nSuccess: Zoo {zoo.name} updated')
+            print(f'\nSuccess: Zoo {zoo.name} updated.')
         except Exception as exc:
             print("\nError updating zoo: ", exc)
     else:
-        print(f'\nZoo not found')
+        print(f'\nZoo not found.')
     
 def close_zoo():
     id_ = input("\nEnter the zoo's id: ")
@@ -82,13 +81,10 @@ def close_zoo():
         for animal in animals:
             animal.delete()
             print(f'Goodbye, {animal.name}!')
-        try:
-            zoo.delete()
-            print(f'\nSuccess: Zoo {zoo.name} deleted')
-        except Exception as exc:
-            print("\nError deleting zoo: ", exc)
+        zoo.delete()
+        print(f'\nSuccess: Zoo {zoo.name} deleted.')
     else:
-        print(f'\nPlease enter a valid zoo id')
+        print(f'\nPlease enter a valid zoo id.')
 
 
 def create_animal():
@@ -113,7 +109,7 @@ def transfer_animal():
     try:
         animal_id = int(input("\nEnter the animal ID: "))
     except ValueError:
-        print("\nInvalid animal ID")
+        print("\nInvalid animal ID.")
         return
     animal = Animal.find_by_id(animal_id)
     if animal.zoo_id == zoo_id:
@@ -121,7 +117,7 @@ def transfer_animal():
         try:
             new_zoo_id = int(input("\nEnter the new zoo ID: "))
         except ValueError:
-            print("\nInvalid zoo ID")
+            print("\nInvalid zoo ID.")
             return
         if new_zoo_id == zoo_id:
             print(f'\n{animal.name} is already in this zoo. \n')
@@ -150,7 +146,7 @@ def update_animal():
         except Exception as exc:
             print("\nError updating animal: ", exc)
     else:
-        print(f'\nAnimal not found')
+        print(f'\nAnimal not found.')
 
 def free_animal():
     id_ = input("\nEnter the animal's id: ")
@@ -159,7 +155,7 @@ def free_animal():
         print(f'\nSuccess: Animal {animal.name} has been returned to nature.')
         print(f'Goodbye, {animal.name}!\n')
     else:
-        print(f'\nAnimal not found')
+        print(f'\nAnimal not found.')
 
 def list_animals_by_species():
     species = input("\nEnter the species name: ")
